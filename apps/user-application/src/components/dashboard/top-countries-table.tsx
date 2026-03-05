@@ -47,7 +47,7 @@ export function TopCountriesTable() {
                   <TableCell className="font-medium">
                     {country.country
                       ? iso31661.whereAlpha2(country.country)?.country ||
-                        country.country
+                      country.country
                       : "Unknown"}
                   </TableCell>
                   <TableCell className="text-right font-semibold">
