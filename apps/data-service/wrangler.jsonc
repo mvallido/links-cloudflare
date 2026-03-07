@@ -16,8 +16,15 @@
 	"kv_namespaces": [
 		{
 			"binding": "CACHE",
-			"id": "baaa4b335c614e2b9f8ccaa9a68053c9baaa4b335c614e2b9f8ccaa9a68053c9",
+			"id": "acfb83ec2d6542de98ac489641f3b0d7",
 			"remote": true
 		}
-	]
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_id": "f290b3e1-c48c-4839-a0ef-605aa9c18ac9",
+			"remote": true
+		}
+	],
 }
