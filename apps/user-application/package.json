@@ -10,8 +10,9 @@
     "serve": "vite preview",
     "test": "vitest run",
     "cf-typegen": "wrangler types --env-interface Env --env stage",
-    "stage:deploy": "npm run build && wrangler deploy",
-    "production:deploy": "npm run production:build && wrangler deploy"
+    "stage:build": "vite build --mode stage && tsc",
+    "stage:deploy": "CLOUDFLARE_ENV=stage npm run stage:build && CLOUDFLARE_ENV=stage wrangler deploy",
+    "production:deploy": "CLOUDFLARE_ENV=production npm run production:build && CLOUDFLARE_ENV=production wrangler deploy"
   },
   "dependencies": {
     "@better-auth/stripe": "1.3.4",
@@ -84,6 +85,6 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
     "web-vitals": "^4.2.4",
-    "wrangler": "^4.59.3"
+    "wrangler": "^4.71.0"
   }
 }
