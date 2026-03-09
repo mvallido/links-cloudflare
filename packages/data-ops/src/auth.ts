@@ -18,6 +18,7 @@ export function createBetterAuth(
       google: {
         clientId: google?.clientId ?? "",
         clientSecret: google?.clientSecret ?? "",
+        prompt: "select_account",
       },
     },
   });
