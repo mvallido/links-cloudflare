@@ -15,6 +15,22 @@
     "enabled": true,
   },
   "env": {
+    "production": {
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_id": "92b7bd53-606b-4b8f-b131-cd1af1cdedcb",
+          "remote": true
+        }
+      ],
+      "services": [
+        {
+          "binding": "BACKEND_SERVICE",
+          "service": "data-service-production",
+          "remote": true,
+        },
+      ]
+    },
     "stage": {
       "d1_databases": [
         {
