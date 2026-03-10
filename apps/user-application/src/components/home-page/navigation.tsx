@@ -24,7 +24,7 @@ export function Navigation() {
             <a href="/app">
               <Button
                 size="sm"
-                className="h-7 px-3.5 bg-foreground text-background hover:bg-foreground/85 rounded-full text-xs font-medium"
+                className="h-7 px-3.5 bg-background text-foreground border border-foreground hover:bg-foreground/5 rounded-full text-xs font-medium"
               >
                 Dashboard
               </Button>
@@ -41,7 +41,7 @@ export function Navigation() {
             <LoginPopup>
               <Button
                 size="sm"
-                className="h-7 px-3.5 bg-foreground text-background hover:bg-foreground/85 rounded-full text-xs font-medium"
+                className="h-7 px-3.5 bg-background text-foreground border border-foreground hover:bg-foreground/5 rounded-full text-xs font-medium"
               >
                 Try it Free
               </Button>

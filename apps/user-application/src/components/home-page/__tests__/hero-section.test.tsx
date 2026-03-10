@@ -35,8 +35,7 @@ vi.mock("framer-motion", () => ({
 describe("HeroSection", () => {
   it("renders the headline", () => {
     render(<HeroSection />);
-    expect(screen.getByText(/Shorten, share,/)).toBeInTheDocument();
-    expect(screen.getByText("track.")).toBeInTheDocument();
+    expect(screen.getByText(/Shorten, share,\s+track\./)).toBeInTheDocument();
   });
 
   it("renders the CTA button", () => {

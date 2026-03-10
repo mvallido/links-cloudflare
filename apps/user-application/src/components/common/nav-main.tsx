@@ -43,7 +43,7 @@ export function NavMain() {
             <SidebarMenuButton
               asChild
               tooltip="Quick Create"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+              className="bg-background text-foreground border border-foreground hover:bg-foreground/5 hover:text-foreground active:bg-foreground/5 active:text-foreground min-w-8 duration-200 ease-linear"
             >
               <Link to="/app/create">
                 <IconCirclePlusFilled />

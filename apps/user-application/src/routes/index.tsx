@@ -11,7 +11,7 @@ function HomePage() {
     <div className="flex flex-col min-h-screen bg-background">
       <Navigation />
       <HeroSection />
-      <footer className="py-5 text-center text-[11px] text-muted-foreground/50">
+      <footer className="py-5 text-center text-[11px] text-muted-foreground">
         &copy; 2025 smartl.inks
       </footer>
     </div>

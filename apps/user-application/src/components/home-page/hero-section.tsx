@@ -25,15 +25,13 @@ export function HeroSection() {
         <div className="text-center">
           {/* Headline */}
           <motion.h1
-            className="text-5xl sm:text-[80px] font-semibold tracking-[-0.04em] text-foreground leading-[1.05] mb-4"
+            className="text-4xl sm:text-6xl font-semibold tracking-[-0.04em] text-foreground leading-[1.05] mb-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
           >
             Shorten, share,{" "}
-            <span className="text-muted-foreground">
-              track.
-            </span>
+track.
           </motion.h1>
 
           {/* Subheading */}
@@ -62,7 +60,7 @@ export function HeroSection() {
             {data ? (
               <Button
                 size="lg"
-                className="h-10 px-5 bg-foreground text-background hover:bg-foreground/85 rounded-full shrink-0 text-[13px] font-medium transition-colors duration-200"
+                className="h-10 px-5 bg-background text-foreground border border-foreground hover:bg-foreground/5 rounded-full shrink-0 text-[13px] font-medium transition-colors duration-200"
                 onClick={handleTryIt}
               >
                 Try it
@@ -79,7 +77,7 @@ export function HeroSection() {
               >
                 <Button
                   size="lg"
-                  className="h-10 px-5 bg-foreground text-background hover:bg-foreground/85 rounded-full shrink-0 text-[13px] font-medium transition-colors duration-200"
+                  className="h-10 px-5 bg-background text-foreground border border-foreground hover:bg-foreground/5 rounded-full shrink-0 text-[13px] font-medium transition-colors duration-200"
                 >
                   Try it
                   <ArrowRight className="ml-1 h-3.5 w-3.5" />
@@ -90,7 +88,7 @@ export function HeroSection() {
 
           {/* Subtle feature line */}
           <motion.p
-            className="text-[13px] text-muted-foreground/50"
+            className="text-sm text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
