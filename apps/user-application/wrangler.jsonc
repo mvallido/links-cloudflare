@@ -21,6 +21,12 @@
   },
   "env": {
     "production": {
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "smartl.ink"
+        }
+      ],
       "d1_databases": [
         {
           "binding": "DB",
@@ -37,6 +43,12 @@
       ]
     },
     "stage": {
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "stage.smartl.ink"
+        }
+      ],
       "d1_databases": [
         {
           "binding": "DB",
