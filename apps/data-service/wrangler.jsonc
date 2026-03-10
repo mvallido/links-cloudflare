@@ -15,6 +15,12 @@
 	},
 	"env": {
 		"production": {
+			"routes": [
+				{
+					"zone_name": "smartl.ink",
+					"pattern": "smartl.ink/r/*"
+				}
+			],
 			"kv_namespaces": [
 				{
 					"binding": "CACHE",
@@ -92,6 +98,12 @@
 			]
 		},
 		"stage": {
+			"routes": [
+				{
+					"zone_name": "smartl.ink",
+					"pattern": "stage.smartl.ink/r/*"
+				}
+			],
 			"kv_namespaces": [
 				{
 					"binding": "CACHE",
