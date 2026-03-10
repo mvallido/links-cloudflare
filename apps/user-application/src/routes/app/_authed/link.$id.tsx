@@ -20,8 +20,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/app/_authed/link/$id")({
   component: RouteComponent,
-  loader: async ({ params, context }) => {
-    await context.queryClient.prefetchQuery(
+  loader: ({ params, context }) => {
+    context.queryClient.prefetchQuery(
       context.trpc.links.getLink.queryOptions({
         linkId: params.id,
       }),

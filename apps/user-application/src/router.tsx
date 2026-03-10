@@ -25,6 +25,7 @@ export function createRouter() {
     routeTree,
     scrollRestoration: true,
     defaultPreload: "intent",
+    defaultPreloadStaleTime: 30_000,
     context: {
       trpc,
       queryClient,
