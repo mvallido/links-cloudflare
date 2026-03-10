@@ -14,14 +14,27 @@ import { Link, Sparkles } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { trpc } from "@/router";
 import { toast } from "sonner";
+import { z } from "zod";
 
 export const Route = createFileRoute("/app/_authed/create")({
   component: RouteComponent,
+  validateSearch: z.object({
+    url: z.string().optional(),
+  }),
 });
 
 function RouteComponent() {
+  const { url: prefillUrl } = Route.useSearch();
   const [name, setName] = useState("");
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState(() => {
+    if (prefillUrl) return prefillUrl;
+    const stored = sessionStorage.getItem("prefill_url");
+    if (stored) {
+      sessionStorage.removeItem("prefill_url");
+      return stored;
+    }
+    return "";
+  });
   const nav = useNavigate();
 
   const createMutation = useMutation(
