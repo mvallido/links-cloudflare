@@ -13,15 +13,18 @@ import { authClient } from "./client";
 
 interface LoginPopupProps {
   children: React.ReactNode;
+  callbackURL?: string;
+  onBeforeAuth?: () => void;
 }
 
-export function LoginPopup({ children }: LoginPopupProps) {
+export function LoginPopup({ children, callbackURL = "/app", onBeforeAuth }: LoginPopupProps) {
   const [loading, setLoading] = useState(false);
   const signInWithGoogle = async () => {
+    onBeforeAuth?.();
     setLoading(true);
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/app",
+      callbackURL,
     });
     setLoading(false);
   };

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IconInnerShadowTop } from "@tabler/icons-react";
+import { Link as LinkIcon } from "lucide-react";
 
 import { NavMain } from "@/components/common/nav-main";
 import { NavUser } from "@/components/common/nav-user";
@@ -23,9 +23,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">SmrtLnks</span>
+              <a href="/">
+                <div className="w-5 h-5 flex items-center justify-center">
+                  <LinkIcon className="!size-3.5 text-foreground/70" />
+                </div>
+                <span className="text-sm font-semibold tracking-tight">smartl.inks</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

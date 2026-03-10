@@ -1,45 +1,53 @@
 import { Button } from "@/components/ui/button";
 import { LoginPopup } from "@/components/auth/login-popup";
 import { UserCircle } from "@/components/auth/user-icon";
-// import { authClient } from "@/components/auth/client";
+import { authClient } from "@/components/auth/client";
+import { Link as LinkIcon } from "lucide-react";
 
 export function Navigation() {
-  // const { data: user, isPending } = authClient.useSession();
-
-  // Dummy data for auth client
-  const user = { id: "1", name: "John Doe", email: "john@example.com" };
-  const isPending = false;
+  const { data: user, isPending } = authClient.useSession();
 
   return (
-    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-4xl mx-auto px-4">
-      <div className="bg-background/80 backdrop-blur-md border border-border/50 rounded-full px-6 py-3 shadow-lg">
-        <div className="flex items-center justify-between">
-          {/* Company Logo/Name */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">
-                SL
-              </span>
-            </div>
-            <span className="font-semibold text-foreground">SmrtLnks</span>
-          </div>
-          {isPending ? (
-            <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
-          ) : user ? (
-            <UserCircle />
-          ) : (
-            <LoginPopup>
-              {/* Login Button */}
+    <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl">
+      <div className="max-w-[980px] mx-auto px-6 h-12 flex items-center justify-between">
+        {/* Logo */}
+        <a href="/" className="flex items-center gap-2">
+          <LinkIcon className="h-[18px] w-[18px] text-foreground" strokeWidth={2.5} />
+          <span className="text-sm font-semibold tracking-tight text-foreground">smartl.inks</span>
+        </a>
+
+        {/* Auth actions */}
+        {isPending ? (
+          <div className="h-7 w-16 rounded-full bg-muted animate-pulse" />
+        ) : user ? (
+          <div className="flex items-center gap-2.5">
+            <a href="/app">
               <Button
-                variant="default"
                 size="sm"
-                className="bg-primary hover:bg-primary/80"
+                className="h-7 px-3.5 bg-background text-foreground border border-foreground hover:bg-foreground/5 rounded-full text-xs font-medium"
               >
-                Login
+                Dashboard
+              </Button>
+            </a>
+            <UserCircle />
+          </div>
+        ) : (
+          <div className="flex items-center gap-0.5">
+            <LoginPopup>
+              <Button variant="ghost" size="sm" className="h-7 px-2.5 text-xs text-foreground/60 hover:text-foreground">
+                Log in
               </Button>
             </LoginPopup>
-          )}
-        </div>
+            <LoginPopup>
+              <Button
+                size="sm"
+                className="h-7 px-3.5 bg-background text-foreground border border-foreground hover:bg-foreground/5 rounded-full text-xs font-medium"
+              >
+                Try it Free
+              </Button>
+            </LoginPopup>
+          </div>
+        )}
       </div>
     </nav>
   );
