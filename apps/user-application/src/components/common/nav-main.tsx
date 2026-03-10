@@ -12,37 +12,28 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
+
+const items = [
+  {
+    title: "Dashboard",
+    path: "/app",
+    icon: IconDashboard,
+  },
+  {
+    title: "Links",
+    path: "/app/links",
+    icon: IconLink,
+  },
+  {
+    title: "Evaluations",
+    path: "/app/evaluations",
+    icon: IconReport,
+  },
+] as const;
 
 export function NavMain() {
-  const nav = useNavigate();
-
-  const items = [
-    {
-      title: "Dashboard",
-      navigate: () =>
-        nav({
-          to: "/app",
-        }),
-      icon: IconDashboard,
-    },
-    {
-      title: "Links",
-      navigate: () =>
-        nav({
-          to: "/app/links",
-        }),
-      icon: IconLink,
-    },
-    {
-      title: "Evaluations",
-      navigate: () =>
-        nav({
-          to: "/app/evaluations",
-        }),
-      icon: IconReport,
-    },
-  ];
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <SidebarGroup>
@@ -50,28 +41,35 @@ export function NavMain() {
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
-              onClick={() =>
-                nav({
-                  to: "/app/create",
-                })
-              }
+              asChild
               tooltip="Quick Create"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+              className="bg-background text-foreground border border-foreground hover:bg-foreground/5 hover:text-foreground active:bg-foreground/5 active:text-foreground min-w-8 duration-200 ease-linear"
             >
-              <IconCirclePlusFilled />
-              <span>Create Link</span>
+              <Link to="/app/create">
+                <IconCirclePlusFilled />
+                <span>Create Link</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton onClick={item.navigate} tooltip={item.title}>
-                {item.icon && <item.icon />}
-                <span>{item.title}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {items.map((item) => {
+            const active = item.path === "/app" ? pathname === "/app" : pathname.startsWith(item.path);
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.title}
+                  isActive={active}
+                >
+                  <Link to={item.path} preload={active ? false : "intent"}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

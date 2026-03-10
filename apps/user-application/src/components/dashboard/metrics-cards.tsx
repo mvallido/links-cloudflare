@@ -22,18 +22,18 @@ function MetricCard({
   descriptionColor,
 }: MetricCardProps) {
   return (
-    <Card className="hover:shadow-md transition-all duration-200">
+    <Card className="border-border/60 shadow-none">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <CardTitle className="text-xs font-medium text-muted-foreground">{title}</CardTitle>
         {icon}
       </CardHeader>
       <CardContent>
-        <div className="text-4xl font-bold">
+        <div className="text-3xl font-semibold tracking-tight">
           {valueFormatted && typeof value === "number"
             ? value.toLocaleString()
             : value}
         </div>
-        <p className={`text-xs ${descriptionColor || "text-muted-foreground"}`}>
+        <p className={`text-xs mt-1 ${descriptionColor || "text-muted-foreground"}`}>
           {description}
         </p>
       </CardContent>

@@ -1,92 +1,100 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Globe, Shield, Zap, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { authClient } from "@/components/auth/client";
 import { LoginPopup } from "@/components/auth/login-popup";
+import { useNavigate } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 
 export function HeroSection() {
   const { data } = authClient.useSession();
+  const [url, setUrl] = useState("");
+  const navigate = useNavigate();
 
-  const handleStartFree = () => {
-    if (data) {
-      window.location.href = "/app";
-    }
+  const handleTryIt = () => {
+    navigate({
+      to: "/app/create",
+      search: url ? { url } : undefined,
+    });
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-background via-background to-primary/5 py-20 sm:py-28">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-grid-white/[0.02] -z-10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent -z-10" />
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-4xl mx-auto">
-          {/* Badge */}
-          <Badge
-            variant="outline"
-            className="mb-6 px-4 py-2 text-sm font-medium bg-primary/5 border-primary/20 text-primary"
+    <section className="flex-1 flex items-center justify-center px-6">
+      <div className="w-full max-w-[680px] mx-auto -mt-12">
+        <div className="text-center">
+          {/* Headline */}
+          <motion.h1
+            className="text-4xl sm:text-6xl font-semibold tracking-[-0.04em] text-foreground leading-[1.05] mb-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            <Sparkles className="mr-2 h-3 w-3" />
-            Trusted by 10,000+ businesses worldwide
-          </Badge>
-
-          {/* Main headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-            Stop Losing Revenue to{" "}
-            <span className="bg-gradient-to-r from-primary via-primary to-purple-600 bg-clip-text text-transparent">
-              Broken Links
-            </span>
-          </h1>
+            Shorten, share,{" "}
+track.
+          </motion.h1>
 
           {/* Subheading */}
-          <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-            Smart link management with AI monitoring and geo-routing that keeps
-            your traffic flowing and revenue growing.
-          </p>
+          <motion.p
+            className="text-lg sm:text-xl font-normal text-muted-foreground mb-8 max-w-[420px] mx-auto leading-[1.5]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            Create short links in seconds. See who clicks, where, and when.
+          </motion.p>
 
-          {/* CTA Section */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <div className="flex gap-2 w-full sm:w-auto max-w-md">
-              <Input
-                placeholder="Enter your URL to shorten"
-                className="h-11 text-base"
-              />
-              {data ? (
+          {/* URL input + CTA */}
+          <motion.div
+            className="flex flex-col sm:flex-row gap-2 justify-center items-center mb-8 max-w-[360px] mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <Input
+              placeholder="Paste a long URL"
+              className="h-10 text-[13px] rounded-lg border-border bg-background placeholder:text-muted-foreground/50"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            />
+            {data ? (
+              <Button
+                size="lg"
+                className="h-10 px-5 bg-background text-foreground border border-foreground hover:bg-foreground/5 rounded-full shrink-0 text-[13px] font-medium transition-colors duration-200"
+                onClick={handleTryIt}
+              >
+                Try it
+                <ArrowRight className="ml-1 h-3.5 w-3.5" />
+              </Button>
+            ) : (
+              <LoginPopup
+                callbackURL="/app/create"
+                onBeforeAuth={() => {
+                  if (url) {
+                    sessionStorage.setItem("prefill_url", url);
+                  }
+                }}
+              >
                 <Button
                   size="lg"
-                  className="h-11 px-6"
-                  onClick={handleStartFree}
+                  className="h-10 px-5 bg-background text-foreground border border-foreground hover:bg-foreground/5 rounded-full shrink-0 text-[13px] font-medium transition-colors duration-200"
                 >
-                  Start Free
-                  <ArrowRight className="ml-1 h-4 w-4" />
+                  Try it
+                  <ArrowRight className="ml-1 h-3.5 w-3.5" />
                 </Button>
-              ) : (
-                <LoginPopup>
-                  <Button size="lg" className="h-11 px-6">
-                    Start Free
-                    <ArrowRight className="ml-1 h-4 w-4" />
-                  </Button>
-                </LoginPopup>
-              )}
-            </div>
-          </div>
+              </LoginPopup>
+            )}
+          </motion.div>
 
-          {/* Features preview */}
-          <div className="flex flex-wrap justify-center items-center gap-6 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-primary" />
-              <span>Instant Link Creation</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Globe className="h-4 w-4 text-primary" />
-              <span>Geo-based Routing</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Shield className="h-4 w-4 text-primary" />
-              <span>AI Link Monitoring</span>
-            </div>
-          </div>
+          {/* Subtle feature line */}
+          <motion.p
+            className="text-sm text-muted-foreground"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            Instant links &middot; Click analytics &middot; Geo routing
+          </motion.p>
         </div>
       </div>
     </section>
