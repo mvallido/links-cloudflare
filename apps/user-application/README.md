@@ -1,142 +1,109 @@
-# TanStack React + tRPC + Cloudflare Worker Template
+# User Application
 
-This template provides a fully integrated setup of TanStack React Router, tRPC, and Cloudflare Workers, allowing you to build full-stack applications that run on the edge.
+React SPA + tRPC API running as a Cloudflare Worker. Serves the dashboard UI and handles authentication, link management, and real-time click visualization.
 
-## Features
+## Domain Routing
 
-- [TanStack Router](https://tanstack.com/router) for type-safe, powerful routing
-- [TanStack Query](https://tanstack.com/query) for data fetching and caching
-- [tRPC](https://trpc.io/) for end-to-end typesafe APIs
-- [Cloudflare Workers](https://workers.cloudflare.com/) for edge computing
-- [Tailwind CSS](https://tailwindcss.com/) for styling
-- [TypeScript](https://www.typescriptlang.org/) for type safety
+| Path | Handler | Description |
+|------|---------|-------------|
+| `/trpc/*` | Worker (tRPC) | API calls from the frontend |
+| `/api/auth/*` | Worker (Better Auth) | OAuth flow, sessions |
+| `/click-socket` | Worker (WebSocket proxy) | Real-time click stream |
+| `/*` | Assets (SPA) | React app with client-side routing |
 
-## Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18 or later)
-- [npm](https://www.npmjs.com/) (v7 or later)
-- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/) for Cloudflare Workers development
-
-### Installation
-
-1. Install dependencies:
-
-```bash
-npm install
-```
-
-2. Start the development server:
-
-```bash
-npm run dev
-```
-
-This will start the local development server at http://localhost:3000.
-
-## Cloudflare Worker Configuration
-
-### Service Bindings and TypeScript
-
-This template includes type definitions for Cloudflare Worker bindings. When adding service bindings or other Cloudflare resources, you should:
-
-1. Generate TypeScript types for your bindings:
-
-```bash
-npm run cf-typegen
-```
-
-This will create or update typings for your Cloudflare Worker environment.
-
-2. Update the `Service Bindings` interface in `service-bindings.d.ts`:
-
-```typescript
-interface ServiceBindings extends Env {
-  // You can add Additional typesame bindings here
-}
-```
-
-3. Use the typed bindings in your tRPC context and procedures:
-
-```typescript
-// In context.ts
-export async function createContext({
-  req,
-  env,
-  workerCtx,
-}: {
-  req: Request;
-  env: ServiceBindings; // This will include your typed bindings
-  workerCtx: ExecutionContext;
-}) {
-  return {
-    req,
-    env,
-    workerCtx,
-  };
-}
-
-// In your tRPC procedures
-export const myProcedure = t.procedure
-  .query(({ ctx }) => {
-    // Access typed bindings
-    const value = await ctx.env.MY_KV.get('some-key');
-    return { value };
-  });
-```
-
-## Deployment
-
-To deploy your application to Cloudflare Workers:
-
-1. Build the application:
-
-```bash
-npm run build
-```
-
-2. Deploy to Cloudflare:
-
-```bash
-npm run deploy
-```
-
-
-This will deploy your application to your Cloudflare Workers account. Make sure you have configured Wrangler with your Cloudflare account credentials.
-
-### Configuration
-
-You can customize your Cloudflare Worker deployment by editing the `wrangler.toml` file. Key configurations include:
-
-- `name`: The name of your worker
-- `compatibility_date`: The Cloudflare Workers compatibility date
-- `routes`: URL pattern matching for your worker
-- `site`: Configuration for serving static assets
+Configured via `run_worker_first` in `wrangler.jsonc` -- matching paths hit the Worker before falling back to static assets.
 
 ## Project Structure
 
 ```
-├── src/                  # Frontend React application
-│   ├── routes/           # TanStack router routes
-│   ├── trpcClient.ts     # tRPC client setup
-│   └── main.tsx          # Application entry point
+user-application/
+├── src/                          # React frontend
+│   ├── main.tsx                  # App entry point
+│   ├── router.tsx                # TanStack Router setup
+│   ├── routes/
+│   │   ├── __root.tsx            # Root layout
+│   │   ├── index.tsx             # Landing page
+│   │   └── app/
+│   │       ├── _authed.tsx       # Auth guard layout
+│   │       ├── index.tsx         # Dashboard
+│   │       ├── create.tsx        # Create link form
+│   │       ├── links.tsx         # Links list
+│   │       ├── link.$id.tsx      # Link detail editor
+│   │       └── evaluations.tsx   # Evaluation results
+│   ├── components/
+│   │   ├── auth/                 # Login popup, user icon, auth client
+│   │   ├── dashboard/            # Dashboard widgets
+│   │   ├── link/                 # Link editor, destination manager
+│   │   ├── home-page/            # Marketing/landing page
+│   │   └── ui/                   # Shadcn UI primitives
+│   └── hooks/
+│       ├── clicks-socket.ts      # WebSocket connection for live clicks
+│       └── geo-clicks-store.ts   # Zustand store for click data
 │
-├── worker/               # Cloudflare Worker backend
-│   ├── index.ts          # Worker entry point
-│   └── trpc/             # tRPC router and procedures
-│       ├── context.ts    # tRPC context creation
-│       ├── router.ts     # Main tRPC router
-│       └── routers/      # Individual tRPC route handlers
+├── worker/                       # Cloudflare Worker backend
+│   ├── index.ts                  # Worker entry point
+│   ├── hono/
+│   │   └── app.ts                # Auth middleware, route dispatch
+│   └── trpc/
+│       ├── trpc-instance.ts      # tRPC init
+│       ├── context.ts            # Request context (userId, env)
+│       ├── router.ts             # Root router
+│       └── routers/
+│           ├── links.ts          # Link CRUD + analytics queries
+│           ├── evaluations.ts    # Problematic destinations, recent evals
+│           └── dummy-data.ts     # Placeholder analytics data
 │
-├── public/               # Static assets
-└── wrangler.toml         # Cloudflare Worker configuration
+└── wrangler.jsonc                # Worker + assets config
 ```
 
-## Additional Resources
+## tRPC API
 
-- [TanStack Router Documentation](https://tanstack.com/router/latest/docs/overview)
-- [TanStack Query Documentation](https://tanstack.com/query/latest/docs/react/overview)
-- [tRPC Documentation](https://trpc.io/docs)
-- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+### Links Router
+
+| Procedure | Type | Description |
+|-----------|------|-------------|
+| `linkList` | query | Paginated list of user's links |
+| `createLink` | mutation | Create a new link |
+| `getLink` | query | Single link with destinations |
+| `updateLinkName` | mutation | Rename a link |
+| `updateLinkDestinations` | mutation | Update routing destinations |
+
+### Evaluations Router
+
+| Procedure | Type | Description |
+|-----------|------|-------------|
+| `problematicDestinations` | query | Links with unavailable products |
+| `recentEvaluations` | query | Paginated evaluation history |
+
+## Auth Flow
+
+1. User clicks "Sign in with Google" -> Better Auth initiates OAuth
+2. Callback hits `/api/auth/callback/google` -> session created in D1
+3. Auth middleware on `/trpc/*` validates session, injects `userId` into tRPC context
+4. Protected routes in `src/routes/app/_authed.tsx` check session client-side via `beforeLoad`
+
+## Development
+
+```bash
+# From repo root
+pnpm build-package    # Build @repo/data-ops first
+pnpm dev-frontend     # Starts Vite on port 3000
+```
+
+To generate Cloudflare binding types after changing `wrangler.jsonc`:
+
+```bash
+pnpm run cf-typegen
+```
+
+## Deployment
+
+```bash
+# From repo root
+pnpm stage:deploy-frontend        # -> stage.smartl.ink
+pnpm production:deploy-frontend   # -> smartl.ink
+```
+
+## Service Binding
+
+The user-application connects to the data-service via a Cloudflare service binding (`BACKEND_SERVICE`). This is used to proxy WebSocket connections for the real-time click dashboard -- the frontend connects to `/click-socket`, which the Worker forwards to the data-service's Durable Object.
