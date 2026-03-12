@@ -6,11 +6,11 @@ import {
   Geography,
   Marker,
 } from "react-simple-maps";
-import { useGeoClickStore } from "@/hooks/geo-clicks-store";
+import { useMergedGeoClicks } from "@/hooks/use-merged-geo-clicks";
 import { groupClicksByMile } from "@/lib/utils";
 
 export function ActiveAreasMap() {
-  const { clicks } = useGeoClickStore();
+  const clicks = useMergedGeoClicks();
 
   const groupedClicks = groupClicksByMile(clicks);
 
