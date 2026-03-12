@@ -2,7 +2,7 @@ import { getDb } from "@/db/database";
 import { links, linkClicks } from "@/drizzle-out/schema";
 import { CreateLinkSchemaType, destinationsSchema, DestinationsSchemaType, linkSchema } from "@/zod/links";
 import { LinkClickMessageType } from "@/zod/queue";
-import { and, count, desc, eq, gt, max, sql } from "drizzle-orm";
+import { and, count, desc, eq, gt, isNotNull, max, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 export async function createLink(data: CreateLinkSchemaType & { accountId: string },
@@ -230,6 +230,31 @@ export async function getLast30DaysClicks(accountId: string) {
     );
 
   return result[0]?.count ?? 0;
+}
+
+export async function getRecentGeoClicks(accountId: string) {
+  const db = getDb();
+  const oneHourAgo = new Date();
+  oneHourAgo.setHours(oneHourAgo.getHours() - 1);
+
+  return await db
+    .select({
+      latitude: linkClicks.latitude,
+      longitude: linkClicks.longitude,
+      clickedTime: linkClicks.clickedTime,
+      country: linkClicks.country,
+    })
+    .from(linkClicks)
+    .where(
+      and(
+        gt(linkClicks.clickedTime, oneHourAgo.toISOString()),
+        eq(linkClicks.accountId, accountId),
+        isNotNull(linkClicks.latitude),
+        isNotNull(linkClicks.longitude),
+      ),
+    )
+    .orderBy(desc(linkClicks.clickedTime))
+    .limit(1000);
 }
 
 export async function getLast30DaysClicksByCountry(accountId: string) {

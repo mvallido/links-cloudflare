@@ -30,6 +30,9 @@ export const Route = createFileRoute("/app/_authed/")({
     context.queryClient.prefetchQuery(
       context.trpc.links.clicksByCountry.queryOptions(),
     );
+    context.queryClient.prefetchQuery(
+      context.trpc.links.recentGeoClicks.queryOptions(),
+    );
   },
 });
 

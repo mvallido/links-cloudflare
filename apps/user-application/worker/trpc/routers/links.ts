@@ -12,6 +12,7 @@ import {
   getLast30DaysClicksByCountry,
   getLink,
   getLinks,
+  getRecentGeoClicks,
   totalLinkClickLastHour,
   updateLinkDestinations,
   updateLinkName
@@ -84,6 +85,9 @@ export const linksTrpcRoutes = t.router({
   }),
   clicksByCountry: t.procedure.query(async ({ ctx }) => {
     return await getLast30DaysClicksByCountry(ctx.userInfo.userId);
+  }),
+  recentGeoClicks: t.procedure.query(async ({ ctx }) => {
+    return await getRecentGeoClicks(ctx.userInfo.userId);
   }),
 });
 
