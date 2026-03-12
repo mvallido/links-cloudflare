@@ -8,10 +8,6 @@ import {
   ActiveRegionMap,
 } from "@/components/dashboard";
 import { useClickSocket } from "@/hooks/clicks-socket";
-import { useEffect } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { trpc } from "@/router";
-import { useGeoClickStore } from "@/hooks/geo-clicks-store";
 
 export const Route = createFileRoute("/app/_authed/")({
   component: RouteComponent,
@@ -42,24 +38,6 @@ export const Route = createFileRoute("/app/_authed/")({
 
 function RouteComponent() {
   const { isConnected } = useClickSocket();
-  const { data: historicalClicks } = useSuspenseQuery(
-    trpc.links.recentGeoClicks.queryOptions(),
-  );
-  const { addClicks, resetClicks } = useGeoClickStore();
-
-  useEffect(() => {
-    if (historicalClicks?.length) {
-      resetClicks();
-      addClicks(
-        historicalClicks.map((c) => ({
-          latitude: c.latitude!,
-          longitude: c.longitude!,
-          time: new Date(c.clickedTime).getTime(),
-          country: c.country ?? "",
-        })),
-      );
-    }
-  }, [historicalClicks]);
 
   return (
     <div className="flex w-full min-w-0">

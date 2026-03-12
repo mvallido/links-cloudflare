@@ -15,7 +15,7 @@ import {
 } from "react-simple-maps";
 import { useState, useMemo } from "react";
 import countries from "world-countries";
-import { useGeoClickStore } from "@/hooks/geo-clicks-store";
+import { useMergedGeoClicks } from "@/hooks/use-merged-geo-clicks";
 import { groupClicksByMile } from "@/lib/utils";
 
 type Region = {
@@ -28,7 +28,7 @@ type Region = {
 };
 
 export function ActiveRegionMap() {
-  const { clicks } = useGeoClickStore();
+  const clicks = useMergedGeoClicks();
 
   // Create a map of country codes to regions
   const countryToRegion = useMemo(() => {
